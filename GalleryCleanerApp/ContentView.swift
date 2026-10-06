@@ -1,25 +1,34 @@
 import SwiftUI
-import Playgrounds
-
-@main struct MyApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
-}
 
 struct ContentView: View {
+    @ObservedObject var trashManager: TrashManager = .shared
+    @State private var selectedTab: Int = 0
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        TabView(selection: $selectedTab) {
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
+                }
+                .tag(0)
+            
+            ExploreView()
+                .tabItem {
+                    Label("Explore", systemImage: "calendar")
+                }
+                .tag(1)
+            
+            TrashView()
+                .tabItem {
+                    Label("Trash", systemImage: "trash.fill")
+                }
+                .badge(trashManager.items.count)
+                .tag(2)
+        }
+        .tint(.blue)
     }
 }
 
 #Preview {
     ContentView()
-}
-
-#Playground {
-    _ = 1 + 2
 }
