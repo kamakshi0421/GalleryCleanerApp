@@ -54,3 +54,9 @@
 * **Prompt / Context Given to AI:** User prompted: "no make it ios native"
 * **AI Output / Artifact Created:** Scrapped the custom glassmorphic TrashView design and rebuilt it from scratch to strictly follow Apple's iOS Human Interface Guidelines (HIG).
 * **Engineering Rationale & Technical Decisions:** Used a standard NavigationStack, segmented Picker, a tight 3-column photo grid with 0 corner radii, and a native .safeAreaInset bottom .bar toolbar to perfectly mimic Apple's 'Recently Deleted' album in the native iOS Photos app.
+
+### Prompt 17
+* **Phase / Category:** UI Redesign / Revert
+* **Prompt / Context Given to AI:** User prompted: "no this is not looking premimum revert it"
+* **AI Output / Artifact Created:** Reverted the standard iOS native layout for TrashView back to the highly customized, glassmorphic 'premium' design from two iterations ago.
+* **Engineering Rationale & Technical Decisions:** The user correctly identified that native iOS layouts (while functional) can feel a bit standard or boring compared to heavily stylized UI. Used git checkout to restore the exact commit with the custom header, dashboard stats card, and dual-action floating pill.
