@@ -42,3 +42,9 @@
 * **Prompt / Context Given to AI:** User prompted: "make it this way it is overlapping other images"
 * **AI Output / Artifact Created:** Added strict GeometryReader constraints and inner clipping to MediaThumbnailView to prevent aspect-filled images from bleeding out of their layout bounds.
 * **Engineering Rationale & Technical Decisions:** In SwiftUI, an Image with contentMode: .fill can draw outside its frame if not explicitly clipped or constrained. Wrapping it in a GeometryReader ensures the image drawing strictly respects the ZStack layout boundaries, preventing overlapping glitches in the Explore scroll list.
+
+### Prompt 15
+* **Phase / Category:** UI Redesign / Customization
+* **Prompt / Context Given to AI:** User prompted: "redesign this page as well" on the TrashView screenshot.
+* **AI Output / Artifact Created:** Completely ripped out the standard navigation bar layout in TrashView and built a custom Recovery Bin header. Designed a large glassmorphic 'Stats Card' to showcase reclaimable space with a giant trash icon. Unified the floating action buttons into a single split pill and updated filter chips with smooth spring animations.
+* **Engineering Rationale & Technical Decisions:** Maintains the app's new distinct, high-fidelity aesthetic, proving custom SwiftUI component architecture while still hooking up seamlessly to the existing TrashManager state and PhotoLibraryService.
