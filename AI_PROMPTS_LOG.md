@@ -36,3 +36,9 @@
 * **Prompt / Context Given to AI:** User prompted: "also dont make the exact same in the screenshots i gave change the ui and others"
 * **AI Output / Artifact Created:** Redesigned the UI to deviate from the reference screens. Introduced a Grid-based dashboard for HomeView using LazyVGrid with new CategoryGridCardView widgets. Redesigned StorageCardView with a circular progress gauge. Modified SwipeReviewView with a new modern card deck style, thick KEEP/TRASH stamps, and circular action buttons. Replaced the color scheme with a bold vibrant aesthetic in ThemeColors.swift.
 * **Engineering Rationale & Technical Decisions:** Satisfied the user request to make the app uniquely distinguishable from the provided reference template to ensure their intern submission stands out while retaining all core requirements.
+
+### Prompt 14
+* **Phase / Category:** UI Bug Fix / Refinement
+* **Prompt / Context Given to AI:** User prompted: "make it this way it is overlapping other images"
+* **AI Output / Artifact Created:** Added strict GeometryReader constraints and inner clipping to MediaThumbnailView to prevent aspect-filled images from bleeding out of their layout bounds.
+* **Engineering Rationale & Technical Decisions:** In SwiftUI, an Image with contentMode: .fill can draw outside its frame if not explicitly clipped or constrained. Wrapping it in a GeometryReader ensures the image drawing strictly respects the ZStack layout boundaries, preventing overlapping glitches in the Explore scroll list.

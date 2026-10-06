@@ -35,9 +35,13 @@ public struct MediaThumbnailView: View {
             // Image Content
             #if canImport(UIKit)
             if let uiImage = loadedImage {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                GeometryReader { geo in
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipped()
+                }
             } else {
                 placeholderView
             }
