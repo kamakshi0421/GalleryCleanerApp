@@ -22,20 +22,8 @@ public final class TrashManager: ObservableObject {
     @Published public var selectedItemIds: Set<String> = []
     
     private init() {
-        // Preload sample trashed item matching reference screenshot 5 (1 item, 2.8 MB)
-        let sampleItem = MediaItem(
-            id: "sample_trashed_1",
-            mediaType: .photo,
-            creationDate: Date(),
-            pixelWidth: 2048,
-            pixelHeight: 1536,
-            fileSize: 2_800_000,
-            duration: 0,
-            mockColorHex: "#E056FD",
-            mockTitle: "Flower Field"
-        )
-        self.items = [TrashedItem(mediaItem: sampleItem, trashedDate: Date())]
-        self.selectedItemIds = [sampleItem.id]
+        self.items = []
+        self.selectedItemIds = []
     }
     
     public var totalReclaimableSpace: Int64 {
