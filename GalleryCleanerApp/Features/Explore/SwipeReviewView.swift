@@ -1,123 +1,183 @@
 import SwiftUI
 
+@MainActor
 public struct SwipeReviewView: View {
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject var trashManager: TrashManager = .shared
-    
-    public let groupTitle: String
-    public let items: [MediaItem]
-    
-    @State private var currentIndex: Int = 0
+    let groupTitle: String
+    let items: [MediaItem]
+    @State private var currentIndex = 0
     @State private var cardOffset: CGSize = .zero
-    @State private var history: [(item: MediaItem, wasTrashed: Bool)] = []
-    @State private var keptCount: Int = 0
-    @State private var trashedCount: Int = 0
-    @State private var savedBytes: Int64 = 0
-    @State private var isCompleted: Bool = false
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var trashManager = TrashManager.shared
     
-    public init(groupTitle: String, items: [MediaItem]) {
+    // Stats
+    @State private var trashedCount = 0
+    @State private var keptCount = 0
+    @State private var savedBytes: Int64 = 0
+    @State private var isCompleted = false
+    
+    // History
+    @State private var history: [(item: MediaItem, wasTrashed: Bool)] = []
+    
+    public init(groupTitle: String = "", items: [MediaItem]) {
         self.groupTitle = groupTitle
         self.items = items
     }
     
     public var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            AppTheme.viewBackground
+                .ignoresSafeArea()
             
-            if isCompleted {
-                ReviewCompleteView(
-                    groupTitle: groupTitle,
-                    keptCount: keptCount,
-                    trashedCount: trashedCount,
-                    reclaimableBytes: savedBytes,
-                    onDone: {
-                        dismiss()
+            if isCompleted || items.isEmpty {
+                VStack(spacing: 20) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 80))
+                        .foregroundColor(AppTheme.accentTeal)
+                    
+                    Text("All Done!")
+                        .font(.system(size: 28, weight: .bold))
+                    
+                    Text("You deleted \(trashedCount) items and saved \(ByteCountFormatter.string(fromByteCount: savedBytes, countStyle: .file)).")
+                        .font(.system(size: 16))
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    
+                    Button(action: { dismiss() }) {
+                        Text("Finish")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, minHeight: 52)
+                            .background(AppTheme.primaryBlue)
+                            .cornerRadius(26)
                     }
-                )
+                    .padding(.horizontal, 40)
+                    .padding(.top, 20)
+                }
             } else {
-                VStack(spacing: 16) {
-                    // Top Navigation Bar (Matches Screenshot 3)
+                VStack(spacing: 0) {
+                    // Header Bar
                     HStack {
                         Button(action: { dismiss() }) {
-                            Image(systemName: "chevron.left")
+                            Image(systemName: "xmark")
                                 .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.white)
-                                .frame(width: 40, height: 40)
-                                .background(Color.white.opacity(0.18))
+                                .foregroundColor(.primary)
+                                .frame(width: 44, height: 44)
+                                .background(Color.appCardBackground)
                                 .clipShape(Circle())
                         }
                         
                         Spacer()
                         
+                        VStack(spacing: 4) {
+                            Text("Review")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundColor(.primary)
+                            Text("\(currentIndex) of \(items.count)")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
                         Button(action: undoLastSwipe) {
-                            Image(systemName: "arrow.uturn.backward")
-                                .font(.system(size: 15, weight: .bold))
-                                .foregroundColor(history.isEmpty ? .gray : .white)
-                                .frame(width: 40, height: 40)
-                                .background(Color.white.opacity(0.18))
+                            Image(systemName: "arrow.counterclockwise")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(history.isEmpty ? .secondary.opacity(0.3) : .primary)
+                                .frame(width: 44, height: 44)
+                                .background(Color.appCardBackground)
                                 .clipShape(Circle())
                         }
                         .disabled(history.isEmpty)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 16)
                     
-                    // Progress Bar & Info (Matches Screenshot 3)
-                    VStack(spacing: 8) {
+                    // Progress & Stats
+                    VStack(spacing: 12) {
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 Capsule()
-                                    .fill(Color.white.opacity(0.2))
-                                    .frame(height: 4)
+                                    .fill(Color.appCardBackground)
+                                    .frame(height: 6)
                                 
                                 Capsule()
-                                    .fill(Color.white)
+                                    .fill(AppTheme.primaryBlue)
                                     .frame(
                                         width: items.isEmpty ? 0 : geo.size.width * CGFloat(currentIndex) / CGFloat(items.count),
-                                        height: 4
+                                        height: 6
                                     )
                                     .animation(.spring(), value: currentIndex)
                             }
                         }
-                        .frame(height: 4)
+                        .frame(height: 6)
                         
                         HStack {
-                            Text("Swiped \(currentIndex) / \(items.count) elements")
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.white.opacity(0.8))
-                            
+                            Text("\(ByteCountFormatter.string(fromByteCount: savedBytes, countStyle: .file)) saved")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(AppTheme.accentTeal)
                             Spacer()
-                            
-                            Text("Saved \(ByteCountFormatter.string(fromByteCount: savedBytes, countStyle: .file))")
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.white.opacity(0.8))
                         }
                     }
-                    .padding(.horizontal, 20)
-                    
-                    Spacer()
+                    .padding(.horizontal, 24)
+                    .padding(.top, 16)
+                    .padding(.bottom, 24)
                     
                     // Card Deck
                     ZStack {
-                        // Background cards stack
                         ForEach(Array(items.enumerated().reversed()), id: \.element.id) { index, item in
                             if index >= currentIndex && index <= currentIndex + 2 {
                                 let isTopCard = (index == currentIndex)
                                 cardView(for: item, isTop: isTopCard)
-                                    .offset(x: isTopCard ? cardOffset.width : 0, y: isTopCard ? cardOffset.height : CGFloat((index - currentIndex) * 6))
-                                    .scaleEffect(isTopCard ? 1.0 : (1.0 - CGFloat(index - currentIndex) * 0.04))
-                                    .rotationEffect(isTopCard ? .degrees(Double(cardOffset.width / 15)) : .zero)
+                                    .offset(x: isTopCard ? cardOffset.width : 0, y: isTopCard ? cardOffset.height : CGFloat((index - currentIndex) * 8))
+                                    .scaleEffect(isTopCard ? 1.0 : (1.0 - CGFloat(index - currentIndex) * 0.05))
+                                    .rotationEffect(isTopCard ? .degrees(Double(cardOffset.width / 20)) : .zero)
                                     .gesture(
                                         isTopCard ? dragGesture(item: item) : nil
                                     )
-                                    .animation(.spring(response: 0.45, dampingFraction: 0.75), value: cardOffset)
+                                    .animation(.spring(response: 0.5, dampingFraction: 0.8), value: cardOffset)
                             }
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .frame(maxHeight: 520)
+                    .padding(.horizontal, 20)
+                    .frame(maxHeight: .infinity)
+                    .padding(.bottom, 40)
                     
-                    Spacer()
+                    // Bottom Buttons
+                    HStack(spacing: 30) {
+                        Button(action: {
+                            if currentIndex < items.count {
+                                swipeCard(item: items[currentIndex], toTrash: true)
+                            }
+                        }) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.appCardBackground)
+                                    .frame(width: 70, height: 70)
+                                    .shadow(color: Color.black.opacity(0.08), radius: 10, y: 5)
+                                Image(systemName: "trash.fill")
+                                    .font(.system(size: 26))
+                                    .foregroundColor(AppTheme.accentRed)
+                            }
+                        }
+                        
+                        Button(action: {
+                            if currentIndex < items.count {
+                                swipeCard(item: items[currentIndex], toTrash: false)
+                            }
+                        }) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.appCardBackground)
+                                    .frame(width: 70, height: 70)
+                                    .shadow(color: Color.black.opacity(0.08), radius: 10, y: 5)
+                                Image(systemName: "heart.fill")
+                                    .font(.system(size: 26))
+                                    .foregroundColor(AppTheme.accentGreen)
+                            }
+                        }
+                    }
+                    .padding(.bottom, 40)
                 }
             }
         }
@@ -126,50 +186,58 @@ public struct SwipeReviewView: View {
     
     private func cardView(for item: MediaItem, isTop: Bool) -> some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color(white: 0.12))
+            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                .fill(Color.appCardBackground)
+                .shadow(color: Color.black.opacity(0.12), radius: 15, y: 8)
             
             MediaThumbnailView(
                 item: item,
                 isSelected: false,
                 showSelectionBadge: false,
                 showSizeBadge: false,
-                cornerRadius: 24
+                cornerRadius: 30
             )
+            .padding(8) // Adds a nice bezel around the image
             
-            // Swipe Indicator Badges (Matches Screenshot 3)
             if isTop {
                 VStack {
-                    HStack(spacing: 24) {
-                        // Trash Indicator (Swipe Left)
-                        ZStack {
-                            Circle()
-                                .fill(Color.red.opacity(cardOffset.width < -30 ? 0.9 : 0.2))
-                                .frame(width: 48, height: 48)
-                            Image(systemName: "trash.fill")
-                                .font(.system(size: 22))
-                                .foregroundColor(cardOffset.width < -30 ? .white : .red)
+                    HStack {
+                        if cardOffset.width > 20 {
+                            Text("KEEP")
+                                .font(.system(size: 32, weight: .black))
+                                .foregroundColor(AppTheme.accentGreen)
+                                .padding(12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(AppTheme.accentGreen, lineWidth: 4)
+                                )
+                                .rotationEffect(.degrees(-15))
+                                .padding(.leading, 20)
+                                .padding(.top, 40)
+                                .opacity(Double(cardOffset.width / 100.0))
                         }
-                        .scaleEffect(cardOffset.width < -30 ? 1.15 : 1.0)
                         
-                        // Keep / Heart Indicator (Swipe Right)
-                        ZStack {
-                            Circle()
-                                .fill(Color(red: 0.12, green: 0.78, blue: 0.65).opacity(cardOffset.width > 30 ? 0.9 : 0.2))
-                                .frame(width: 48, height: 48)
-                            Image(systemName: "heart.fill")
-                                .font(.system(size: 22))
-                                .foregroundColor(cardOffset.width > 30 ? .white : Color(red: 0.12, green: 0.78, blue: 0.65))
+                        Spacer()
+                        
+                        if cardOffset.width < -20 {
+                            Text("TRASH")
+                                .font(.system(size: 32, weight: .black))
+                                .foregroundColor(AppTheme.accentRed)
+                                .padding(12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(AppTheme.accentRed, lineWidth: 4)
+                                )
+                                .rotationEffect(.degrees(15))
+                                .padding(.trailing, 20)
+                                .padding(.top, 40)
+                                .opacity(Double(abs(cardOffset.width) / 100.0))
                         }
-                        .scaleEffect(cardOffset.width > 30 ? 1.15 : 1.0)
                     }
-                    .padding(.top, 24)
-                    
                     Spacer()
                 }
             }
         }
-        .shadow(color: Color.black.opacity(0.35), radius: 12, y: 6)
     }
     
     private func dragGesture(item: MediaItem) -> some Gesture {
@@ -180,13 +248,10 @@ public struct SwipeReviewView: View {
             .onEnded { value in
                 let threshold: CGFloat = 100
                 if value.translation.width < -threshold {
-                    // Swiped Left -> Trash
                     swipeCard(item: item, toTrash: true)
                 } else if value.translation.width > threshold {
-                    // Swiped Right -> Keep
                     swipeCard(item: item, toTrash: false)
                 } else {
-                    // Snap back
                     cardOffset = .zero
                 }
             }

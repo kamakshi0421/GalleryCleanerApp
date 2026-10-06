@@ -9,7 +9,7 @@ import AppKit
 extension Color {
     public static var appCardBackground: Color {
         #if canImport(UIKit)
-        return Color(UIColor.secondarySystemGroupedBackground)
+        return Color(UIColor.systemGray6)
         #elseif canImport(AppKit)
         return Color(NSColor.controlBackgroundColor)
         #else
@@ -19,7 +19,7 @@ extension Color {
     
     public static var appViewBackground: Color {
         #if canImport(UIKit)
-        return Color(UIColor.systemGroupedBackground)
+        return Color(UIColor.systemBackground)
         #elseif canImport(AppKit)
         return Color(NSColor.windowBackgroundColor)
         #else
@@ -55,19 +55,19 @@ extension Color {
 }
 
 public enum AppTheme {
-    public static let primaryBlue = Color(red: 0.12, green: 0.53, blue: 0.98)
-    public static let accentPink = Color(red: 0.98, green: 0.25, blue: 0.55)
-    public static let accentTeal = Color(red: 0.12, green: 0.78, blue: 0.65)
-    public static let accentGreen = Color(red: 0.18, green: 0.80, blue: 0.44)
-    public static let accentRed = Color(red: 0.95, green: 0.22, blue: 0.28)
+    public static let primaryBlue = Color(red: 0.35, green: 0.25, blue: 0.98)
+    public static let accentPink = Color(red: 0.98, green: 0.45, blue: 0.15)
+    public static let accentTeal = Color(red: 0.22, green: 0.88, blue: 0.75)
+    public static let accentGreen = Color(red: 0.68, green: 0.90, blue: 0.24)
+    public static let accentRed = Color(red: 0.95, green: 0.32, blue: 0.38)
     
     public static let storageGradient = LinearGradient(
         gradient: Gradient(colors: [
-            Color(red: 0.95, green: 0.25, blue: 0.60),
-            Color(red: 0.25, green: 0.55, blue: 0.98)
+            Color(red: 0.35, green: 0.25, blue: 0.98),
+            Color(red: 0.98, green: 0.45, blue: 0.15)
         ]),
-        startPoint: .leading,
-        endPoint: .trailing
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
     )
     
     public static let cardBackground = Color.appCardBackground
@@ -83,7 +83,7 @@ extension View {
     @ViewBuilder
     public func appInlineTitle() -> some View {
         #if os(iOS)
-        self.navigationBarTitleDisplayMode(.inline)
+        self.navigationBarTitleDisplayMode(.large)
         #else
         self
         #endif
