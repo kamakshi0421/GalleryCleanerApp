@@ -131,7 +131,7 @@ public struct HomeView: View {
                             .padding(.horizontal)
                         }
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 120) // Increased to clear iOS 18 floating tab bar
                 }
             }
             .navigationTitle("Dashboard")

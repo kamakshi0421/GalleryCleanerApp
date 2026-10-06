@@ -106,7 +106,7 @@ public struct TrashView: View {
                             }
                             .padding(.horizontal)
                         }
-                        .padding(.bottom, 100)
+                        .padding(.bottom, 180) // Increased to clear floating action bar and tab bar
                     }
                 }
             }
@@ -199,7 +199,7 @@ public struct TrashView: View {
             }
         }
         .padding(.horizontal, 24)
-        .padding(.bottom, 16)
+        .padding(.bottom, 100) // Increased to avoid iOS 18 floating tab bar
         .background(
             LinearGradient(
                 colors: [Color.appSystemBackground.opacity(0), Color.appSystemBackground.opacity(0.95), Color.appSystemBackground],

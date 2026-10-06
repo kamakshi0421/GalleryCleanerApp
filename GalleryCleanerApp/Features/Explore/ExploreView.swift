@@ -58,7 +58,7 @@ public struct ExploreView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 12)
-                .padding(.bottom, 32)
+                .padding(.bottom, 120) // Increased to clear iOS 18 floating tab bar
             }
             .navigationTitle("Explore")
             #if os(iOS)
