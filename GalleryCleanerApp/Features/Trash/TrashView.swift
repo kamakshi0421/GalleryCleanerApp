@@ -125,7 +125,6 @@ public struct TrashView: View {
                                     trashManager.restoreSelected()
                                     isSelectionMode = false
                                 }
-                                .buttonStyle(.bordered)
                                 .disabled(trashManager.selectedItemIds.isEmpty)
                                 
                                 Spacer()
@@ -133,24 +132,21 @@ public struct TrashView: View {
                                 Button("Delete") {
                                     showingPermanentDeleteConfirmation = true
                                 }
-                                .buttonStyle(.bordered)
-                                .tint(.red)
                                 .disabled(trashManager.selectedItemIds.isEmpty)
+                                .foregroundColor(trashManager.selectedItemIds.isEmpty ? .secondary : .red)
                             } else {
                                 Spacer()
                                 Button("Recover All") {
                                     trashManager.selectAll(visibleIds: trashManager.items.map { $0.id })
                                     trashManager.restoreSelected()
                                 }
-                                .buttonStyle(.bordered)
                                 
                                 Spacer()
                                 
                                 Button("Empty") {
                                     showingEmptyConfirmation = true
                                 }
-                                .buttonStyle(.bordered)
-                                .tint(.red)
+                                .foregroundColor(.red)
                                 Spacer()
                             }
                         }
