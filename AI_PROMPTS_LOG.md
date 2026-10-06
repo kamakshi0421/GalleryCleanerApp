@@ -48,3 +48,9 @@
 * **Prompt / Context Given to AI:** User prompted: "redesign this page as well" on the TrashView screenshot.
 * **AI Output / Artifact Created:** Completely ripped out the standard navigation bar layout in TrashView and built a custom Recovery Bin header. Designed a large glassmorphic 'Stats Card' to showcase reclaimable space with a giant trash icon. Unified the floating action buttons into a single split pill and updated filter chips with smooth spring animations.
 * **Engineering Rationale & Technical Decisions:** Maintains the app's new distinct, high-fidelity aesthetic, proving custom SwiftUI component architecture while still hooking up seamlessly to the existing TrashManager state and PhotoLibraryService.
+
+### Prompt 16
+* **Phase / Category:** UI Redesign / Revert
+* **Prompt / Context Given to AI:** User prompted: "no make it ios native"
+* **AI Output / Artifact Created:** Scrapped the custom glassmorphic TrashView design and rebuilt it from scratch to strictly follow Apple's iOS Human Interface Guidelines (HIG).
+* **Engineering Rationale & Technical Decisions:** Used a standard NavigationStack, segmented Picker, a tight 3-column photo grid with 0 corner radii, and a native .safeAreaInset bottom .bar toolbar to perfectly mimic Apple's 'Recently Deleted' album in the native iOS Photos app.
