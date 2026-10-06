@@ -10,9 +10,9 @@ public struct TrashView: View {
     @State private var isSelectionMode = false
     
     let columns = [
-        GridItem(.flexible(), spacing: 2),
-        GridItem(.flexible(), spacing: 2),
-        GridItem(.flexible(), spacing: 2)
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
     ]
     
     public init() {}
@@ -37,7 +37,7 @@ public struct TrashView: View {
                     .padding()
                     
                     ScrollView {
-                        LazyVGrid(columns: columns, spacing: 2) {
+                        LazyVGrid(columns: columns, spacing: 12) {
                             ForEach(filteredItems) { item in
                                 let isSelected = trashManager.selectedItemIds.contains(item.id)
                                 MediaThumbnailView(
@@ -45,7 +45,7 @@ public struct TrashView: View {
                                     isSelected: isSelected,
                                     showSelectionBadge: isSelectionMode,
                                     showSizeBadge: false,
-                                    cornerRadius: 0 // Native photo grid uses sharp corners
+                                    cornerRadius: 16 // Rounded corners as requested
                                 )
                                 .aspectRatio(1, contentMode: .fill)
                                 .clipped()
@@ -61,7 +61,7 @@ public struct TrashView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 2)
+                        .padding(.horizontal, 16)
                         
                         let totalReclaimableBytes = filteredItems.reduce(0) { $0 + $1.mediaItem.fileSize }
                         Text("\(filteredItems.count) Items • \(ByteCountFormatter.string(fromByteCount: totalReclaimableBytes, countStyle: .file))")
