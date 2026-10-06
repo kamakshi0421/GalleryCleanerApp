@@ -60,3 +60,9 @@
 * **Prompt / Context Given to AI:** User prompted: "no this is not looking premimum revert it"
 * **AI Output / Artifact Created:** Reverted the standard iOS native layout for TrashView back to the highly customized, glassmorphic 'premium' design from two iterations ago.
 * **Engineering Rationale & Technical Decisions:** The user correctly identified that native iOS layouts (while functional) can feel a bit standard or boring compared to heavily stylized UI. Used git checkout to restore the exact commit with the custom header, dashboard stats card, and dual-action floating pill.
+
+### Prompt 18
+* **Phase / Category:** UI Redesign / Revert
+* **Prompt / Context Given to AI:** User prompted: "aree i mean the ios native one was good use the same"
+* **AI Output / Artifact Created:** Restored the iOS native layout for TrashView with rounded grid corners by checking out the exact previous commit where it was implemented.
+* **Engineering Rationale & Technical Decisions:** The user clarified they actually preferred the clean, native iOS HIG look for the TrashView (with the added rounded corners). Used git checkout to grab the exact state from commit 8e5f106.
