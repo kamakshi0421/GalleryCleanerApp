@@ -22,6 +22,11 @@ public struct ExploreView: View {
     @ObservedObject var photoService: PhotoLibraryService = .shared
     @State private var selectedGroup: YearPhotoGroup? = nil
     
+    let columns = [
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
+    ]
+    
     public init() {}
     
     public var groups: [YearPhotoGroup] {
@@ -40,27 +45,31 @@ public struct ExploreView: View {
     
     public var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 16) {
+            ZStack {
+                AppTheme.viewBackground.ignoresSafeArea()
+                
+                ScrollView {
                     if groups.isEmpty {
                         EmptyStateView(
-                            icon: "calendar",
-                            title: "No Media to Explore",
+                            icon: "photo.on.rectangle.angled",
+                            title: "No Memories Found",
                             message: "Add photos to your gallery or refresh to review your memories by year.",
-                            iconTint: .blue
+                            iconTint: AppTheme.primaryBlue
                         )
-                        .padding(.top, 40)
+                        .padding(.top, 60)
                     } else {
-                        ForEach(groups) { group in
-                            exploreCard(for: group)
+                        LazyVGrid(columns: columns, spacing: 16) {
+                            ForEach(groups) { group in
+                                galleryCard(for: group)
+                            }
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+                        .padding(.bottom, 120) // Clear floating tab bar
                     }
                 }
-                .padding(.horizontal)
-                .padding(.top, 12)
-                .padding(.bottom, 120) // Increased to clear iOS 18 floating tab bar
             }
-            .navigationTitle("Explore")
+            .navigationTitle("Time Machine")
             #if os(iOS)
             .fullScreenCover(item: $selectedGroup) { group in
                 SwipeReviewView(groupTitle: group.year, items: group.items)
@@ -73,61 +82,72 @@ public struct ExploreView: View {
         }
     }
     
-    private func exploreCard(for group: YearPhotoGroup) -> some View {
+    private func galleryCard(for group: YearPhotoGroup) -> some View {
         Button(action: {
             selectedGroup = group
             HapticFeedback.medium()
         }) {
-            ZStack(alignment: .leading) {
-                // Background Thumbnail / Gradient (Matches Screenshot 2)
+            ZStack(alignment: .bottomLeading) {
+                // Background Image
                 if let rep = group.representativeItem {
                     MediaThumbnailView(
                         item: rep,
                         isSelected: false,
                         showSelectionBadge: false,
                         showSizeBadge: false,
-                        cornerRadius: 20
+                        cornerRadius: 24
                     )
-                    .frame(height: 140)
+                    .aspectRatio(1, contentMode: .fill) // Make it perfectly square
                 } else {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
                         .fill(Color(white: 0.2))
-                        .frame(height: 140)
+                        .aspectRatio(1, contentMode: .fill)
                 }
                 
-                // Dark Gradient Overlay for readability
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                // Vignette / Dark Gradient for Text Readability
+                RoundedRectangle(cornerRadius: 24, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [Color.black.opacity(0.65), Color.black.opacity(0.2)],
-                            startPoint: .leading,
-                            endPoint: .trailing
+                            colors: [Color.black.opacity(0.8), Color.black.opacity(0.0)],
+                            startPoint: .bottom,
+                            endPoint: .top
                         )
                     )
-                    .frame(height: 140)
                 
-                // Content
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(group.year)
-                            .font(.system(size: 26, weight: .bold, design: .rounded))
+                // Text Overlay
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(group.year)
+                        .font(.system(size: 28, weight: .black, design: .rounded))
+                        .foregroundColor(.white)
+                        .shadow(color: .black.opacity(0.3), radius: 2, y: 1)
+                    
+                    Text("\(group.items.count) \(group.items.count == 1 ? "item" : "items")")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(.white.opacity(0.9))
+                    
+                    Text(group.formattedBytes)
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(AppTheme.accentTeal)
+                }
+                .padding(16)
+                
+                // Action Icon (Top Right)
+                VStack {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "rectangle.stack.fill")
+                            .font(.system(size: 14))
                             .foregroundColor(.white)
-                        
-                        Text("\(group.items.count) \(group.items.count == 1 ? "item" : "items") • \(group.formattedBytes)")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.white.opacity(0.85))
+                            .padding(8)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .padding(12)
                     }
-                    .padding(.leading, 24)
-                    
                     Spacer()
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.white.opacity(0.8))
-                        .padding(.trailing, 24)
                 }
             }
-            .shadow(color: Color.black.opacity(0.12), radius: 8, y: 4)
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .shadow(color: Color.black.opacity(0.15), radius: 10, y: 5)
         }
         .buttonStyle(PlainButtonStyle())
     }
