@@ -55,7 +55,7 @@ public struct SimilarPhotosView: View {
             }
         }
         .navigationTitle("Similar Photos")
-        .navigationBarTitleDisplayMode(.inline)
+        .appInlineTitle()
         .onAppear {
             autoSelectInferior()
         }
@@ -153,7 +153,7 @@ public struct SimilarPhotosView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color(UIColor.secondarySystemGroupedBackground))
+                .fill(Color.appCardBackground)
                 .shadow(color: Color.black.opacity(0.03), radius: 6, y: 2)
         )
         .padding(.horizontal)
@@ -186,7 +186,7 @@ public struct SimilarPhotosView: View {
         }
         .background(
             LinearGradient(
-                colors: [Color(UIColor.systemBackground).opacity(0), Color(UIColor.systemBackground).opacity(0.95), Color(UIColor.systemBackground)],
+                colors: [Color.appSystemBackground.opacity(0), Color.appSystemBackground.opacity(0.95), Color.appSystemBackground],
                 startPoint: .top,
                 endPoint: .bottom
             )

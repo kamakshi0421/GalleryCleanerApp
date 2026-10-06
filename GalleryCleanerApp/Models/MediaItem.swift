@@ -1,6 +1,7 @@
 import Foundation
-import Photos
+#if canImport(UIKit)
 import UIKit
+#endif
 
 public enum MediaItemType: String, Codable, Sendable {
     case photo

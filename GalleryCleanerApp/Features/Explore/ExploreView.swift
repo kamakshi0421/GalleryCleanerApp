@@ -61,9 +61,15 @@ public struct ExploreView: View {
                 .padding(.bottom, 32)
             }
             .navigationTitle("Explore")
+            #if os(iOS)
             .fullScreenCover(item: $selectedGroup) { group in
                 SwipeReviewView(groupTitle: group.year, items: group.items)
             }
+            #else
+            .sheet(item: $selectedGroup) { group in
+                SwipeReviewView(groupTitle: group.year, items: group.items)
+            }
+            #endif
         }
     }
     

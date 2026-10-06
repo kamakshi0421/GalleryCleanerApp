@@ -51,7 +51,7 @@ public struct StorageCardView: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Color(UIColor.systemGray5))
+                        .fill(Color.appSystemGray5)
                         .frame(height: 8)
                     
                     Capsule()
@@ -100,7 +100,7 @@ public struct StorageCardView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color(UIColor.secondarySystemGroupedBackground))
+                .fill(Color.appCardBackground)
                 .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
         )
     }

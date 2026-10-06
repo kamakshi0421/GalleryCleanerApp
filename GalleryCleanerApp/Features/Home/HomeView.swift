@@ -68,7 +68,7 @@ public struct HomeView: View {
                         .padding(.horizontal, 16)
                         .background(
                             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(Color(UIColor.secondarySystemGroupedBackground))
+                                .fill(Color.appCardBackground)
                                 .shadow(color: Color.black.opacity(0.03), radius: 6, y: 2)
                         )
                         .padding(.horizontal)
@@ -108,7 +108,7 @@ public struct HomeView: View {
                         .padding(.horizontal, 16)
                         .background(
                             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(Color(UIColor.secondarySystemGroupedBackground))
+                                .fill(Color.appCardBackground)
                                 .shadow(color: Color.black.opacity(0.03), radius: 6, y: 2)
                         )
                         .padding(.horizontal)
@@ -148,7 +148,7 @@ public struct HomeView: View {
                         .padding(.horizontal, 16)
                         .background(
                             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(Color(UIColor.secondarySystemGroupedBackground))
+                                .fill(Color.appCardBackground)
                                 .shadow(color: Color.black.opacity(0.03), radius: 6, y: 2)
                         )
                         .padding(.horizontal)
@@ -175,7 +175,7 @@ public struct HomeView: View {
                         .padding(.horizontal, 16)
                         .background(
                             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(Color(UIColor.secondarySystemGroupedBackground))
+                                .fill(Color.appCardBackground)
                                 .shadow(color: Color.black.opacity(0.03), radius: 6, y: 2)
                         )
                         .padding(.horizontal)

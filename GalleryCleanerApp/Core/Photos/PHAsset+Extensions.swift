@@ -1,5 +1,7 @@
 import Photos
+#if canImport(UIKit)
 import UIKit
+#endif
 
 extension PHAsset {
     /// Returns the estimated or actual file size in bytes using PHAssetResource

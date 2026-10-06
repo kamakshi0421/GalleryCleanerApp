@@ -1,6 +1,10 @@
 import SwiftUI
 import Photos
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 public struct MediaThumbnailView: View {
     public let item: MediaItem
     public var isSelected: Bool = false
@@ -8,7 +12,9 @@ public struct MediaThumbnailView: View {
     public var showSizeBadge: Bool = true
     public var cornerRadius: CGFloat = 12
     
+    #if canImport(UIKit)
     @State private var loadedImage: UIImage? = nil
+    #endif
     
     public init(
         item: MediaItem,
@@ -27,14 +33,17 @@ public struct MediaThumbnailView: View {
     public var body: some View {
         ZStack {
             // Image Content
+            #if canImport(UIKit)
             if let uiImage = loadedImage {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
-                // Procedural placeholder with beautiful gradient
                 placeholderView
             }
+            #else
+            placeholderView
+            #endif
             
             // Top Right Selection Badge (Matches Screenshot 5)
             if showSelectionBadge {
@@ -133,6 +142,7 @@ public struct MediaThumbnailView: View {
     }
     
     private func loadThumbnail() {
+        #if canImport(UIKit)
         guard let id = item.assetLocalIdentifier, !id.hasPrefix("mock_") else {
             return
         }
@@ -156,6 +166,7 @@ public struct MediaThumbnailView: View {
                 self.loadedImage = image
             }
         }
+        #endif
     }
 }
 

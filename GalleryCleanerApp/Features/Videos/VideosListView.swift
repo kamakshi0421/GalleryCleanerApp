@@ -90,9 +90,9 @@ public struct VideosListView: View {
             }
         }
         .navigationTitle("Videos")
-        .navigationBarTitleDisplayMode(.inline)
+        .appInlineTitle()
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 if !photoService.videos.isEmpty {
                     Button(isSelectionMode ? "Done" : "Select") {
                         withAnimation {
@@ -140,7 +140,7 @@ public struct VideosListView: View {
         }
         .background(
             LinearGradient(
-                colors: [Color(UIColor.systemBackground).opacity(0), Color(UIColor.systemBackground).opacity(0.95), Color(UIColor.systemBackground)],
+                colors: [Color.appSystemBackground.opacity(0), Color.appSystemBackground.opacity(0.95), Color.appSystemBackground],
                 startPoint: .top,
                 endPoint: .bottom
             )

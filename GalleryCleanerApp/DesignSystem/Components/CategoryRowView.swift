@@ -48,7 +48,7 @@ public struct CategoryRowView: View {
             
             Image(systemName: "chevron.right")
                 .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(Color(UIColor.tertiaryLabel))
+                .foregroundColor(Color.appTertiaryLabel)
         }
         .padding(.vertical, 8)
         .contentShape(Rectangle())

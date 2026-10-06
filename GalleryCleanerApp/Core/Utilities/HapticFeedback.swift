@@ -1,3 +1,6 @@
+import Foundation
+
+#if canImport(UIKit)
 import UIKit
 
 @MainActor
@@ -38,3 +41,14 @@ public enum HapticFeedback {
         generator.selectionChanged()
     }
 }
+#else
+@MainActor
+public enum HapticFeedback {
+    public static func light() {}
+    public static func medium() {}
+    public static func heavy() {}
+    public static func success() {}
+    public static func warning() {}
+    public static func selection() {}
+}
+#endif

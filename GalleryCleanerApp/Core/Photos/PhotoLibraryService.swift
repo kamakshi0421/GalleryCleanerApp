@@ -1,7 +1,9 @@
 import Foundation
 import Photos
-import UIKit
 import Combine
+#if canImport(UIKit)
+import UIKit
+#endif
 
 @MainActor
 public final class PhotoLibraryService: ObservableObject {

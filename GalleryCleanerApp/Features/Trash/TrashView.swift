@@ -78,7 +78,7 @@ public struct TrashView: View {
                                                 .padding(.vertical, 8)
                                                 .background(
                                                     Capsule()
-                                                        .fill(isSelected ? Color.red : Color(UIColor.systemGray5))
+                                                        .fill(isSelected ? Color.red : Color.appSystemGray5)
                                                 )
                                         }
                                     }
@@ -111,9 +111,9 @@ public struct TrashView: View {
                 }
             }
             .navigationTitle("Trash (\(trashManager.items.count))")
-            .navigationBarTitleDisplayMode(.inline)
+            .appInlineTitle()
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     if !trashManager.items.isEmpty {
                         Button("Empty All") {
                             showingEmptyConfirmation = true
@@ -202,7 +202,7 @@ public struct TrashView: View {
         .padding(.bottom, 16)
         .background(
             LinearGradient(
-                colors: [Color(UIColor.systemBackground).opacity(0), Color(UIColor.systemBackground).opacity(0.95), Color(UIColor.systemBackground)],
+                colors: [Color.appSystemBackground.opacity(0), Color.appSystemBackground.opacity(0.95), Color.appSystemBackground],
                 startPoint: .top,
                 endPoint: .bottom
             )

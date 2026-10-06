@@ -60,7 +60,7 @@ public struct LargeVideosView: View {
             }
         }
         .navigationTitle("Large Videos")
-        .navigationBarTitleDisplayMode(.inline)
+        .appInlineTitle()
         .overlay(alignment: .bottom) {
             if !selectedIds.isEmpty {
                 bottomActionBar
@@ -126,7 +126,7 @@ public struct LargeVideosView: View {
             // Checkmark button
             ZStack {
                 Circle()
-                    .fill(isSelected ? Color.blue : Color(UIColor.systemGray5))
+                    .fill(isSelected ? Color.blue : Color.appSystemGray5)
                     .frame(width: 26, height: 26)
                 
                 if isSelected {
@@ -139,7 +139,7 @@ public struct LargeVideosView: View {
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(UIColor.secondarySystemGroupedBackground))
+                .fill(Color.appCardBackground)
                 .shadow(color: Color.black.opacity(0.03), radius: 6, y: 2)
         )
         .padding(.horizontal)
@@ -180,7 +180,7 @@ public struct LargeVideosView: View {
         }
         .background(
             LinearGradient(
-                colors: [Color(UIColor.systemBackground).opacity(0), Color(UIColor.systemBackground).opacity(0.95), Color(UIColor.systemBackground)],
+                colors: [Color.appSystemBackground.opacity(0), Color.appSystemBackground.opacity(0.95), Color.appSystemBackground],
                 startPoint: .top,
                 endPoint: .bottom
             )
